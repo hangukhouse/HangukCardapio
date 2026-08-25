@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Hanguk House - Cardápio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #c0392b;
+      --primary-dark: #962d22;
+      --primary-light: #f9e5e3;
+      --bg: #faf9f7;
+      --card-bg: #ffffff;
+      --text: #1a1a1a;
+      --text-secondary: #666;
+      --text-muted: #999;
+      --border: #eee;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 0 0 32px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 32px 20px 0;
+    }
+
+    .logo-container {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 16px;
+      border: 3px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      background: white;
+    }
+
+    .logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .store-name {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .store-info {
+      font-size: 13px;
+      opacity: 0.85;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .store-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2ecc71;
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.closed { background: #e74c3c; animation: none; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ===== CATEGORY NAV ===== */
+    .category-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .category-nav::-webkit-scrollbar { display: none; }
+
+    .category-nav-inner {
+      display: flex;
+      padding: 0 16px;
+      gap: 4px;
+      min-width: max-content;
+    }
+
+    .category-nav-item {
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .category-nav-item:hover { color: var(--primary); }
+
+    .category-nav-item.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .content {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 0 100px;
+    }
+
+    /* ===== CATEGORY SECTION ===== */
+    .category-section {
+      padding: 24px 16px 8px;
+    }
+
+    .category-title {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-count {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--border);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* ===== PRODUCT CARD ===== */
+    .product-card {
+      display: flex;
+      gap: 14px;
+      padding: 16px;
+      margin: 0 16px 10px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .product-card:active {
+      transform: scale(0.98);
+    }
+
+    .product-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .product-name .kr {
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--primary);
+    }
+
+    .product-description {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 10px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-price {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .product-price .from {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .product-price .sizes {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+
+    .product-image {
+      width: 110px;
+      height: 110px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #f0f0f0;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.05);
+    }
+
+    .no-image {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+    }
+
+    .age-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #e74c3c;
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      border-radius: 20px 20px 0 0;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-image {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+    }
+
+    .modal-handle {
+      width: 36px;
+      height: 4px;
+      background: #ddd;
+      border-radius: 2px;
+      margin: 12px auto;
+    }
+
+    .modal-body {
+      padding: 0 20px 32px;
+    }
+
+    .modal-title {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .modal-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      white-space: pre-line;
+    }
+
+    .modal-prices {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .modal-price-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+    }
+
+    .modal-price-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .modal-price-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 24px 16px 32px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .footer .hours {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card-bg);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      color: var(--text-secondary);
+    }
+
+    /* ===== LOADING ===== */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== SEARCH ===== */
+    .search-container {
+      padding: 12px 16px;
+      background: var(--card-bg);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-container {
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 641px) {
+      .content { padding: 0 0 100px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-container">
+        <img id="storeLogo" src="" alt="Logo">
+      </div>
+      <div class="store-name" id="storeName">Hanguk House</div>
+      <div class="store-info" id="storeAddress"></div>
+      <div class="store-status" id="storeStatus">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Verificando...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-container">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Buscar no cardápio...">
+  </div>
+
+  <!-- Category Navigation -->
+  <nav class="category-nav" id="categoryNav">
+    <div class="category-nav-inner" id="categoryNavInner"></div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="content" id="menuContent">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Carregando cardápio...</p>
+    </div>
+  </main>
+
+  <!-- Product Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div style="position:relative;">
+        <img class="modal-image" id="modalImage" src="" alt="">
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-handle"></div>
+      <div class="modal-body">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p class="modal-description" id="modalDescription"></p>
+        <div class="modal-prices" id="modalPrices"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dados embutidos (fallback para CORS) -->
+  <script src="data.js"></script>
+
+  <script>
+    // ===== CONFIG =====
+    const SLUG = 'hanguk-house';
+    const MENU_API = `https://mobile.goomer.app/webmenu/${SLUG}/localmenu`;
+    const STORE_API = `https://${SLUG}.goomer.app/`;
+
+    // ===== STATE =====
+    let menuData = [];
+    let categories = [];
+    let storeSettings = {};
+
+    // ===== INIT =====
+    async function init() {
+      await Promise.all([loadMenu(), loadStore()]);
+    }
+
+    // ===== LOAD MENU =====
+    async function loadMenu() {
+      try {
+        const res = await fetch(MENU_API);
+        const data = await res.json();
+        menuData = data.products || [];
+      } catch (err) {
+        console.log('API indisponível, usando dados embutidos');
+        if (typeof EMBEDDED_MENU !== 'undefined') {
+          menuData = EMBEDDED_MENU.products || [];
+        } else {
+          document.getElementById('menuContent').innerHTML =
+            '<div class="loading"><p>Erro ao carregar cardápio. Tente novamente.</p></div>';
+          return;
+        }
+      }
+      buildCategories();
+      renderNav();
+      renderMenu();
+      setupSearch();
+      setupScrollSpy();
+    }
+
+    // ===== LOAD STORE =====
+    async function loadStore() {
+      try {
+        const res = await fetch(STORE_API);
+        const html = await res.text();
+        const match = html.match(/__NEXT_DATA__.*?>(.*?)<\/script>/);
+        if (match) {
+          const data = JSON.parse(match[1]);
+          storeSettings = data.props?.pageProps?.settings || {};
+        }
+      } catch (err) {
+        console.log('Store API indisponível, usando dados embutidos');
+        if (typeof EMBEDDED_SETTINGS !== 'undefined') {
+          storeSettings = EMBEDDED_SETTINGS;
+        }
+      }
+      renderStoreInfo();
+    }
+
+    // ===== RENDER STORE INFO =====
+    function renderStoreInfo() {
+      const s = storeSettings;
+
+      // Logo - usa a logo do Goomer ou permite substituir
+      const logoEl = document.getElementById('storeLogo');
+      logoEl.src = s.mm_logo_url || '';
+
+      // Nome
+      document.getElementById('storeName').textContent = s.name || 'Hanguk House';
+
+      // Endereço
+      const addr = s.address || {};
+      document.getElementById('storeAddress').textContent =
+        `📍 ${addr.street || ''}, ${addr.number || ''} - ${addr.neighborhood || ''}, ${addr.city || ''}`;
+
+      // Status (aberto/fechado)
+      updateStoreStatus(s);
+    }
+
+    function updateStoreStatus(s) {
+      const hours = s.mm_operating_hours?.hours || [];
+      const now = new Date();
+      const dayMap = { 'Dom': 0, 'Seg': 1, 'Ter': 2, 'Qua': 3, 'Qui': 4, 'Sex': 5, 'Sab': 6,
+                       'Sáb': 6 };
+      const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      const currentDay = now.getDay();
+      const currentTime = now.getHours() * 100 + now.getMinutes();
+
+      let isOpen = false;
+      let hoursText = '';
+
+      if (s.mm_always_open) {
+        isOpen = true;
+        hoursText = 'Sempre aberto';
+      } else {
+        for (const h of hours) {
+          const fromDay = dayMap[h.from] ?? -1;
+          const toDay = dayMap[h.to] ?? -1;
+          let inRange = false;
+
+          if (fromDay <= toDay) {
+            inRange = currentDay >= fromDay && currentDay <= toDay;
+          } else {
+            inRange = currentDay >= fromDay || currentDay <= toDay;
+          }
+
+          if (inRange) {
+            const [openH, openM] = h.open.split(':').map(Number);
+            const [closeH, closeM] = h.close.split(':').map(Number);
+            const openTime = openH * 100 + openM;
+            const closeTime = closeH * 100 + closeM;
+
+            if (currentTime >= openTime && currentTime <= closeTime) {
+              isOpen = true;
+            }
+            hoursText = `${h.from} a ${h.to} • ${h.open} - ${h.close}`;
+          }
+        }
+      }
+
+      if (s.mm_store_closed || s.mm_temporarily_closed) {
+        isOpen = false;
+      }
+
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('statusText');
+
+      if (isOpen) {
+        statusDot.className = 'status-dot';
+        statusText.textContent = `Aberto agora • ${hoursText}`;
+      } else {
+        statusDot.className = 'status-dot closed';
+        statusText.textContent = `Fechado • ${hoursText}`;
+      }
+    }
+
+    // ===== BUILD CATEGORIES =====
+    function buildCategories() {
+      const seenIds = [];
+      categories = [];
+      for (const p of menuData) {
+        if (!seenIds.includes(p.group_id)) {
+          seenIds.push(p.group_id);
+          categories.push({
+            id: p.group_id,
+            name: p.group_name,
+            items: []
+          });
+        }
+      }
+      for (const p of menuData) {
+        const cat = categories.find(c => c.id === p.group_id);
+        if (cat) cat.items.push(p);
+      }
+    }
+
+    // ===== RENDER NAV =====
+    function renderNav() {
+      const nav = document.getElementById('categoryNavInner');
+      nav.innerHTML = categories.map((cat, i) =>
+        `<div class="category-nav-item${i === 0 ? ' active' : ''}"
+              data-cat-id="${cat.id}"
+              onclick="scrollToCategory('${cat.id}')">${cat.name}</div>`
+      ).join('');
+    }
+
+    // ===== RENDER MENU =====
+    function renderMenu(filter = '') {
+      const content = document.getElementById('menuContent');
+      const lowerFilter = filter.toLowerCase();
+
+      let html = '';
+
+      for (const cat of categories) {
+        const filteredItems = filter
+          ? cat.items.filter(p =>
+              p.name.toLowerCase().includes(lowerFilter) ||
+              (p.description || '').toLowerCase().includes(lowerFilter)
+            )
+          : cat.items;
+
+        if (filteredItems.length === 0) continue;
+
+        html += `
+          <div class="category-section" id="cat-${cat.id}">
+            <h2 class="category-title">
+              ${cat.name}
+              <span class="category-count">${filteredItems.length}</span>
+            </h2>
+          </div>
+        `;
+
+        for (const item of filteredItems) {
+          const hasImage = item.images && (item.images.medium || item.images.large);
+          const imgSrc = item.images?.medium || item.images?.large || '';
+          const prices = item.prices || [];
+          const minPrice = item.min_price_flag ? item.price_tag : (prices[0]?.price || 0);
+
+          let priceHtml = '';
+          if (prices.length === 0 || (prices.length === 1 && prices[0].price === 0)) {
+            priceHtml = '';
+          } else if (prices.length === 1) {
+            priceHtml = formatPrice(prices[0].price);
+          } else {
+            priceHtml = `<span class="from">a partir de </span>${formatPrice(minPrice)}<span class="sizes"> • ${prices.length} opções</span>`;
+          }
+
+          // Separar nome coreano do nome em português
+          const nameParts = item.name.split(' - ');
+          let nameHtml = '';
+          if (nameParts.length > 1) {
+            nameHtml = `<span class="kr">${nameParts[0]}</span> ${nameParts.slice(1).join(' - ')}`;
+          } else {
+            nameHtml = item.name;
+          }
+
+          html += `
+            <div class="product-card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
+              ${item.limit_age ? '<span class="age-badge">+18</span>' : ''}
+              <div class="product-info">
+                <div class="product-name">${nameHtml}</div>
+                <div class="product-description">${escapeHtml(item.description || '')}</div>
+                <div class="product-price">${priceHtml}</div>
+              </div>
+              ${hasImage ? `
+                <div class="product-image">
+                  <img src="${imgSrc}" alt="${escapeHtml(item.name)}" loading="lazy">
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+      }
+
+      // Footer
+      html += `
+        <div class="footer">
+          <div class="hours">🕐 ${getHoursText()}</div>
+          <p>Hanguk House — Comida Coreana Autêntica</p>
+          <p style="margin-top:4px;">
+            <a href="https://maps.google.com/?q=${storeSettings.address?.latitude || ''},${storeSettings.address?.longitude || ''}" target="_blank">📍 Ver no mapa</a>
+            &nbsp;•&nbsp;
+            <a href="https://wa.me/${(storeSettings.mm_whatsapp_phone_number || '').replace(/\D/g, '')}" target="_blank">💬 WhatsApp</a>
+          </p>
+        </div>
+      `;
+
+      content.innerHTML = html;
+    }
+
+    function getHoursText() {
+      const hours = storeSettings.mm_operating_hours?.hours || [];
+      if (storeSettings.mm_always_open) return 'Sempre aberto';
+      return hours.map(h => `${h.from} a ${h.to}: ${h.open} – ${h.close}`).join(' | ') || '';
+    }
+
+    // ===== MODAL =====
+    function openModal(item) {
+      const overlay = document.getElementById('modalOverlay');
+      const imgEl = document.getElementById('modalImage');
+      const titleEl = document.getElementById('modalTitle');
+      const descEl = document.getElementById('modalDescription');
+      const pricesEl = document.getElementById('modalPrices');
+
+      const hasImage = item.images && (item.images.large || item.images.medium);
+
+      if (hasImage) {
+        imgEl.src = item.images.large || item.images.medium;
+        imgEl.style.display = 'block';
+      } else {
+        imgEl.style.display = 'none';
+      }
+
+      titleEl.textContent = item.name;
+      descEl.textContent = item.description || 'Sem descrição disponível.';
+
+      const prices = item.prices || [];
+      if (prices.length > 0) {
+        pricesEl.innerHTML = prices.map(p => `
+          <div class="modal-price-item">
+            <span class="modal-price-name">${escapeHtml(p.name || 'Único')}</span>
+            <span class="modal-price-value">${p.price === 0 ? 'Consultar' : formatPrice(p.price)}</span>
+          </div>
+        `).join('');
+      } else {
+        pricesEl.innerHTML = '';
+      }
+
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+
+    // ===== SEARCH =====
+    function setupSearch() {
+      const input = document.getElementById('searchInput');
+      let timeout;
+      input.addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => renderMenu(input.value.trim()), 200);
+      });
+    }
+
+    // ===== SCROLL SPY =====
+    function scrollToCategory(catId) {
+      const el = document.getElementById(`cat-${catId}`);
+      if (el) {
+        const navHeight = document.getElementById('categoryNav').offsetHeight;
+        const y = el.getBoundingClientRect().top + window.scrollY - navHeight - 8;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+
+    function setupScrollSpy() {
+      const navItems = document.querySelectorAll('.category-nav-item');
+      const nav = document.getElementById('categoryNav');
+
+      window.addEventListener('scroll', () => {
+        const navHeight = nav.offsetHeight + 20;
+        let activeId = null;
+
+        for (const cat of categories) {
+          const el = document.getElementById(`cat-${cat.id}`);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= navHeight + 50) {
+              activeId = cat.id;
+            }
+          }
+        }
+
+        navItems.forEach(item => {
+          const isActive = item.dataset.catId == activeId;
+          item.classList.toggle('active', isActive);
+          if (isActive) {
+            item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        });
+      }, { passive: true });
+    }
+
+    // ===== HELPERS =====
+    function formatPrice(value) {
+      return `R$ ${Number(value).toFixed(2).replace('.', ',')}`;
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ===== START =====
+    init();
+  </script>
+</body>
+</html>

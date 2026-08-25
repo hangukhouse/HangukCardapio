@@ -1,0 +1,8 @@
+# Temporários
+*.tmp
+.DS_Store
+
+# Dados brutos (opcionais, o data.js já contém tudo)
+# hanguk_settings.json
+# hanguk_menu.json
+# hanguk_localmenu.json

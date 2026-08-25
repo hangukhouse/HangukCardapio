@@ -1,0 +1,330 @@
+{
+  "specialty_name": "Internacional",
+  "address": {
+    "zipcode": "22.640-000",
+    "country": "Brasil",
+    "number": "350",
+    "city": "Rio de Janeiro",
+    "street": "Avenida Armando Lombardi",
+    "latitude": "-23.0062406",
+    "state": "RJ",
+    "neighborhood": "Barra da Tijuca",
+    "complement": "Loja 320",
+    "longitude": "-43.3085662"
+  },
+  "store_code": 47572,
+  "gg_version": "0.0.1",
+  "is_abrahao": false,
+  "about": "🗓️ Qui-Dom\n⏰ 12h às 21:30h\n🛵 Delivery\n🇰🇷 Culinária Coreana é:\n🍱 Nutritiva\n🤤 Saborosa\n🍖 De carne\n🥗 Vegetariana\n🍸 Temos Soju",
+  "name": "Hanguk House",
+  "id": 47145,
+  "slug": "hanguk-house",
+  "subscription_info": {
+    "trial_enabled": false,
+    "pack_type": "free",
+    "freemium": true
+  },
+  "description": "Template Importado",
+  "mm_logo_key": "stores/47145/products/mobile_menu/templates/66068/logo_v1738948805.png",
+  "mm_logo_url": "https://static.goomer.app/stores/47145/products/mobile_menu/templates/66068/logo_v1738948805.png",
+  "mm_resized_logos": {
+    "logo": {
+      "url": "https://static.goomer.app/stores/47145/products/mobile_menu/templates/66068/logo_v1738948805.png",
+      "key": "stores/47145/products/mobile_menu/templates/66068/logo_v1738948805.png"
+    },
+    "logo_16x16": {
+      "url": "https://static.goomer.app/stores/47145/products/mobile_menu/templates/66068/logo_16x16_v1738948805.png",
+      "key": "stores/47145/products/mobile_menu/templates/66068/logo_16x16_v1738948805.png"
+    },
+    "logo_32x32": {
+      "url": "https://static.goomer.app/stores/47145/products/mobile_menu/templates/66068/logo_32x32_v1738948805.png",
+      "key": "stores/47145/products/mobile_menu/templates/66068/logo_32x32_v1738948805.png"
+    },
+    "logo_120x120": {
+      "url": "https://static.goomer.app/stores/47145/products/mobile_menu/templates/66068/logo_120x120_v1738948805.png",
+      "key": "stores/47145/products/mobile_menu/templates/66068/logo_120x120_v1738948805.png"
+    },
+    "logo_180x180": {
+      "url": "https://static.goomer.app/stores/47145/products/mobile_menu/templates/66068/logo_180x180_v1738948805.png",
+      "key": "stores/47145/products/mobile_menu/templates/66068/logo_180x180_v1738948805.png"
+    },
+    "logo_192x192": {
+      "url": "https://static.goomer.app/stores/47145/products/mobile_menu/templates/66068/logo_192x192_v1738948805.png",
+      "key": "stores/47145/products/mobile_menu/templates/66068/logo_192x192_v1738948805.png"
+    },
+    "logo_300x300": {
+      "url": "https://static.goomer.app/stores/47145/products/mobile_menu/templates/66068/logo_300x300_v1738948805.png",
+      "key": "stores/47145/products/mobile_menu/templates/66068/logo_300x300_v1738948805.png"
+    },
+    "logo_512x512": {
+      "url": "https://static.goomer.app/stores/47145/products/mobile_menu/templates/66068/logo_512x512_v1738948805.png",
+      "key": "stores/47145/products/mobile_menu/templates/66068/logo_512x512_v1738948805.png"
+    }
+  },
+  "mm_main_color": "#ffffff",
+  "mm_secondary_color": "#2B0D61",
+  "mm_banner_url": "",
+  "mm_banner_key": "",
+  "mm_resized_banners": "",
+  "mm_splash_screen_message": "Continue pedindo sua comida favorita!",
+  "menu_url": "https://www.goomer.app/webmenu/hanguk-house/menu/1787439765972",
+  "mm_always_open": true,
+  "mm_autoprint_new_order": "accepted",
+  "mm_check_manager_view_bill": false,
+  "mm_coupon_enabled": true,
+  "mm_delivery_enabled": true,
+  "mm_delivery_minimum_value": "30",
+  "mm_delivery_minimum_value_enabled": true,
+  "mm_delivery_zone_options_dynamic": [],
+  "mm_delivery_zone_options_neighborhood": "",
+  "mm_delivery_zone_options_neighborhood_enabled": true,
+  "mm_delivery_zone_options_static": {
+    "pricing": "ask",
+    "time": {
+      "from": 0,
+      "to": 0
+    },
+    "delivery_time_enabled": false
+  },
+  "mm_delivery_zone_type": "static",
+  "mm_enabled": true,
+  "mm_entrega_facil_ifood_enabled": false,
+  "mm_fixed_hours": "",
+  "mm_free_delivery_enabled": true,
+  "mm_free_delivery_minimum_value": "350",
+  "mm_google_analytics_enabled": false,
+  "mm_google_ordering_redirect_menu": true,
+  "mm_google_reserve_link_order_food": true,
+  "mm_has_active_survey": false,
+  "mm_hours_mode": "custom",
+  "mm_ifood_catalog_import_authorized": false,
+  "mm_info_version": "2.0",
+  "mm_in_store_always_open": true,
+  "mm_in_store_enabled": false,
+  "mm_in_store_enable_service_tax": false,
+  "mm_in_store_fixed_hours": "",
+  "mm_in_store_hours_mode": "fixed",
+  "mm_in_store_maximum_order_distance": "500",
+  "mm_in_store_modes": [
+    "mm_kiosk",
+    "mm_table"
+  ],
+  "mm_in_store_operating_hours": "",
+  "mm_in_store_order_show_observations": true,
+  "mm_in_store_service_tax": "0",
+  "mm_in_store_validate_distance_enabled": false,
+  "mm_notification_new_order": true,
+  "mm_onsite_menu_url": "https://www.goomer.app/webmenu/hanguk-house/localmenu/1787439765972",
+  "mm_operating_hours": {
+    "hours": [
+      {
+        "to": "Dom",
+        "from": "Qui",
+        "open": "12:00",
+        "close": "21:00"
+      }
+    ]
+  },
+  "mm_order_scheduling_delivery": {
+    "min": {
+      "value": 2,
+      "type": "hours"
+    },
+    "max": {
+      "value": 7,
+      "type": "hours"
+    }
+  },
+  "mm_order_scheduling_enabled": false,
+  "mm_order_scheduling_only": false,
+  "mm_order_scheduling_takeaway": {
+    "min": {
+      "value": 2,
+      "type": "hours"
+    },
+    "max": {
+      "value": 7,
+      "type": "hours"
+    }
+  },
+  "mm_order_status_check_enabled": false,
+  "mm_payment_cash_enabled": false,
+  "mm_payment_credit_enabled": true,
+  "mm_payment_credit_flags": [
+    {
+      "name": "Visa",
+      "checked": false
+    },
+    {
+      "name": "MasterCard",
+      "checked": false
+    },
+    {
+      "name": "Maestro",
+      "checked": false
+    },
+    {
+      "name": "Hipercard",
+      "checked": false
+    },
+    {
+      "name": "American Express",
+      "checked": false
+    },
+    {
+      "name": "Diners Club",
+      "checked": false
+    },
+    {
+      "name": "Elo",
+      "checked": false
+    },
+    {
+      "name": "LINK MERCADO PAGO",
+      "checked": true
+    }
+  ],
+  "mm_payment_debit_enabled": true,
+  "mm_payment_debit_flags": [
+    {
+      "name": "Visa",
+      "checked": false
+    },
+    {
+      "name": "MasterCard",
+      "checked": false
+    },
+    {
+      "name": "Maestro",
+      "checked": false
+    },
+    {
+      "name": "Elo",
+      "checked": false
+    },
+    {
+      "name": "Pagamento via PIX",
+      "checked": true
+    }
+  ],
+  "mm_payment_mpago_checkout_enabled": false,
+  "mm_payment_mpago_link_enabled": false,
+  "mm_payment_mpago_qrcode_enabled": false,
+  "mm_payment_mpago_store_public_key": "",
+  "mm_payment_nupay_checkout_enabled": false,
+  "mm_payment_pix_enabled": false,
+  "mm_payment_pix_info": {
+    "accountName": "",
+    "key": ""
+  },
+  "mm_payment_qrcode_nupay_checkout_enabled": false,
+  "mm_payment_qrcode_tuna_credit_card_checkout_enabled": false,
+  "mm_payment_qrcode_tuna_pix_checkout_enabled": false,
+  "mm_payment_tuna_credit_card_checkout_enabled": false,
+  "mm_payment_tuna_pix_checkout_enabled": false,
+  "mm_payment_voucher_enabled": false,
+  "mm_show_short_address": false,
+  "mm_suggestive_selling_enabled": true,
+  "mm_takeaway_discount": "0",
+  "mm_takeaway_discount_enabled": false,
+  "mm_takeaway_enabled": true,
+  "mm_takeaway_time": "",
+  "mm_temporarily_closed": false,
+  "mm_whatsapp_order_enabled": true,
+  "mm_whatsapp_phone_number": "+552124941076",
+  "pre_mm_payment_nupay_checkout_enabled": false,
+  "pre_mm_payment_qrcode_nupay_checkout_enabled": false,
+  "pre_mm_payment_qrcode_tuna_credit_card_checkout_enabled": false,
+  "pre_mm_payment_qrcode_tuna_pix_checkout_enabled": false,
+  "pre_mm_payment_tuna_credit_card_checkout_enabled": false,
+  "pre_mm_payment_tuna_pix_checkout_enabled": false,
+  "mm_store_domain": "",
+  "mm_currency": {
+    "id": 1,
+    "code": "BRL",
+    "label": "Real",
+    "symbol": "R$",
+    "enabled": true,
+    "locale": "pt-BR"
+  },
+  "mm_payment_qrcode_credit_enabled": false,
+  "mm_facebook_business_access_token": "",
+  "mm_payment_qrcode_debit_flags": "",
+  "mm_is_loyalty_integration_abrahao_delivery_enabled": false,
+  "mm_new_menu_enabled": true,
+  "mm_payment_tuna_condition": "",
+  "mm_order_show_prices": false,
+  "mm_ask_for_name": "optional",
+  "mm_delivery_average_time": "",
+  "kds_review_order_delivery": false,
+  "mm_delivery_zone_options": "",
+  "mm_payment_voucher_flags": "",
+  "mm_payment_qrcode_mpago_checkout_enabled": false,
+  "mm_payment_qrcode_voucher_flags": "",
+  "mm_facebook_business_enabled": false,
+  "mm_multiple_menus_layout_enabled": false,
+  "mm_payment_vrpague_link_enabled": false,
+  "mm_abrahao_menu_version": "",
+  "mm_delivery_fee": "0",
+  "mm_theme": "system",
+  "mm_languages": [],
+  "mm_store_closed": false,
+  "mm_abrahao_crm_survey_enabled": true,
+  "mm_delivery_fee_enabled": false,
+  "mm_autoprint_close_order": false,
+  "mm_facebook_pixel_dns_code": "",
+  "mm_in_store_store_closed": false,
+  "mm_order_show_orders_count": true,
+  "kds_review_order_qrcode": false,
+  "mm_a_id": "",
+  "mm_store_custom_address": false,
+  "mm_timezone": {
+    "id": 21,
+    "code": "BRT",
+    "iana": "America/Sao_Paulo",
+    "name": "Brasília Time",
+    "label": "Horário de Brasília",
+    "utc": "-03:00",
+    "enabled": true
+  },
+  "mm_store_enable_thirky_ads": false,
+  "mm_always_ask_for_tab": false,
+  "mm_payment_pix_fee_enabled": true,
+  "mm_facebook_pixel_id": "",
+  "mm_order_show_codes": false,
+  "mm_payment_qrcode_voucher_enabled": false,
+  "mm_wide_menu_list_enabled": false,
+  "mm_payment_qrcode_credit_flags": "",
+  "mm_receipt_ask_for_cpf": false,
+  "mm_google_analytics_id": "",
+  "mm_change_new_menu_count": "0",
+  "mm_payment_qrcode_cash_enabled": false,
+  "mm_payment_mpago_marketplace_fee": "3.6",
+  "mm_ask_for_phone": "optional",
+  "mm_payment_qrcode_debit_enabled": false,
+  "mm_receipt_required_cpf": false,
+  "mm_order_show_observations": true,
+  "mm_feature_customer_sign_up_enabled": true,
+  "mm_feature_tuna_pix_payment_method_enabled": true,
+  "mm_feature_tuna_payment_method_enabled": true,
+  "mm_feature_order_v2_enabled": true,
+  "mm_feature_first_order_enabled": true,
+  "mm_feature_priceless_order_blocking_enabled": true,
+  "mm_feature_orders_pulling_off_enabled": true,
+  "mm_feature_google_ordering_redirect_enabled": true,
+  "mm_feature_nupay_payment_method_enabled": true,
+  "mm_feature_schedule_by_group_and_product_enabled": true,
+  "mm_feature_google_pay_payment_method_enabled": true,
+  "mm_feature_apple_pay_payment_method_enabled": true,
+  "mm_feature_subscription_freemium_status": "active",
+  "mm_feature_subscription_status": "active",
+  "mm_feature_subscription_ggo_enabled": true,
+  "mm_feature_subscription_pack_type": "free",
+  "mm_feature_subscription_trial_enabled": false,
+  "mm_store_unified_at": "",
+  "mm_g_id": "47572",
+  "mm_menu_version": "",
+  "mm_close_order_button_disabled": false,
+  "mm_close_order_closing_message": "",
+  "mm_close_order_block_orders": false
+}
