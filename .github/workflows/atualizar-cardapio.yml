@@ -1,0 +1,91 @@
+name: Atualizar Cardápio
+
+on:
+  # Executar manualmente pelo GitHub
+  workflow_dispatch:
+
+  # Cron: atualiza todo dia às 10h (horário de Brasília = 13h UTC)
+  schedule:
+    - cron: '0 13 * * *'
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Buscar dados do Goomer
+        run: |
+          SLUG="hanguk-house"
+
+          echo "📥 Baixando cardápio local (mesa)..."
+          curl -sf "https://mobile.goomer.app/webmenu/${SLUG}/localmenu" > hanguk_localmenu.json
+
+          echo "📥 Baixando cardápio delivery..."
+          curl -sf "https://mobile.goomer.app/webmenu/${SLUG}/menu" > hanguk_menu.json
+
+          echo "📥 Baixando dados da loja..."
+          curl -sf "https://${SLUG}.goomer.app/" | python3 -c "
+          import json, sys, re
+          html = sys.stdin.read()
+          match = re.search(r'__NEXT_DATA__.*?>(.*?)</script>', html)
+          if match:
+              data = json.loads(match.group(1))
+              settings = data['props']['pageProps']['settings']
+              print(json.dumps(settings, indent=2, ensure_ascii=False))
+          " > hanguk_settings.json
+
+      - name: Gerar data.js
+        run: |
+          python3 -c "
+          import json
+          from datetime import datetime
+
+          with open('hanguk_localmenu.json') as f:
+              menu = json.load(f)
+          with open('hanguk_settings.json') as f:
+              settings = json.load(f)
+
+          essential = {
+              'name': settings.get('name'),
+              'address': settings.get('address'),
+              'mm_logo_url': settings.get('mm_logo_url'),
+              'mm_whatsapp_phone_number': settings.get('mm_whatsapp_phone_number'),
+              'mm_operating_hours': settings.get('mm_operating_hours'),
+              'mm_always_open': settings.get('mm_always_open'),
+              'mm_store_closed': settings.get('mm_store_closed'),
+              'mm_temporarily_closed': settings.get('mm_temporarily_closed'),
+          }
+
+          now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+          total = len(menu.get('products', []))
+
+          print(f'// Atualizado automaticamente em: {now}')
+          print(f'// Total de produtos: {total}')
+          print('const EMBEDDED_MENU = ' + json.dumps(menu, ensure_ascii=False) + ';')
+          print('const EMBEDDED_SETTINGS = ' + json.dumps(essential, ensure_ascii=False) + ';')
+          " > data.js
+
+          echo "✅ data.js gerado com $(python3 -c "import json; print(len(json.load(open('hanguk_localmenu.json'))['products']))"
+          ) produtos"
+
+      - name: Verificar mudanças
+        id: changes
+        run: |
+          git diff --quiet data.js && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit e Push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.js hanguk_localmenu.json hanguk_menu.json hanguk_settings.json
+          git commit -m "🔄 Cardápio atualizado $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
