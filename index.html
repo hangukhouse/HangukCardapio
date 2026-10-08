@@ -610,10 +610,36 @@
       return local.concat(extras);
     }
 
+    // O Goomer responde com versões diferentes conforme o servidor que atende
+    // (itens novos aparecem e somem entre requisições). Consultamos várias vezes
+    // e juntamos as respostas por id, ficando com a versão mais recente de cada item.
+    const FETCH_TENTATIVAS = 4;
+
+    function unirRespostas(listas) {
+      const porId = new Map();
+      for (const lista of listas) {
+        for (const p of lista) {
+          const atual = porId.get(p.id);
+          if (!atual || String(p.version) > String(atual.version)) porId.set(p.id, p);
+        }
+      }
+      // mantém a ordem da resposta mais completa
+      const base = listas.slice().sort((x, y) => y.length - x.length)[0] || [];
+      const ordem = base.map(p => p.id);
+      const resto = [...porId.keys()].filter(id => !ordem.includes(id));
+      return [...ordem, ...resto].map(id => porId.get(id));
+    }
+
     async function fetchProducts(url) {
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) throw new Error(res.status);
-      return (await res.json()).products || [];
+      const pedidos = Array.from({ length: FETCH_TENTATIVAS }, async (_, i) => {
+        const res = await fetch(`${url}?_=${Date.now()}${i}`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(res.status);
+        return (await res.json()).products || [];
+      });
+      const ok = (await Promise.allSettled(pedidos))
+        .filter(r => r.status === 'fulfilled').map(r => r.value);
+      if (ok.length === 0) throw new Error('sem resposta');
+      return unirRespostas(ok);
     }
 
     async function loadMenu() {
