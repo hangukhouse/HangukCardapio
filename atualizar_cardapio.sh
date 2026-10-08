@@ -9,11 +9,11 @@ echo "🔄 Atualizando dados do cardápio Hanguk House..."
 
 # Baixar menu local (QR code)
 echo "  📥 Baixando cardápio (localmenu)..."
-curl -s "https://mobile.goomer.app/webmenu/${SLUG}/localmenu" > "${DIR}/hanguk_localmenu.json"
+curl -s "https://www.goomer.app/webmenu/${SLUG}/localmenu" > "${DIR}/hanguk_localmenu.json"
 
 # Baixar menu delivery
 echo "  📥 Baixando cardápio (delivery)..."
-curl -s "https://mobile.goomer.app/webmenu/${SLUG}/menu" > "${DIR}/hanguk_menu.json"
+curl -s "https://www.goomer.app/webmenu/${SLUG}/menu" > "${DIR}/hanguk_menu.json"
 
 # Baixar settings da loja
 echo "  📥 Baixando dados da loja..."
