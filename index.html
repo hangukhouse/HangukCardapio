@@ -117,6 +117,35 @@
       margin-top: 10px;
     }
 
+    .lang-switch {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 2;
+      display: flex;
+      gap: 2px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 3px;
+    }
+
+    .lang-switch button {
+      border: 0;
+      background: transparent;
+      color: white;
+      font: 600 12px 'Inter', 'Noto Sans KR', sans-serif;
+      padding: 5px 10px;
+      border-radius: 16px;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    .lang-switch button.active {
+      background: white;
+      color: var(--primary);
+      opacity: 1;
+    }
+
     .status-dot {
       width: 7px;
       height: 7px;
@@ -519,6 +548,11 @@
 
   <!-- Header -->
   <div class="header">
+    <div class="lang-switch" id="langSwitch">
+      <button type="button" data-lang="pt">PT</button>
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="ko">한국어</button>
+    </div>
     <div class="header-content">
       <div class="logo-container">
         <img id="storeLogo" src="" alt="Logo">
@@ -569,6 +603,7 @@
 
   <!-- Dados embutidos (fallback para CORS) -->
   <script src="data.js"></script>
+  <script src="i18n.js"></script>
 
   <script>
     // ===== CONFIG =====
@@ -581,8 +616,131 @@
     let categories = [];
     let storeSettings = {};
 
+    // ===== IDIOMA (PT / EN / KO) =====
+    // Textos em i18n.js. Sem tradução, mostra o português original.
+    const IDIOMAS = ['pt', 'en', 'ko'];
+    const aviso = new Set();
+    let lang = 'pt';
+
+    function escolherIdioma() {
+      let l = null;
+      try { l = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+      if (!IDIOMAS.includes(l)) {
+        try { l = localStorage.getItem('lang'); } catch (e) { l = null; }
+      }
+      return IDIOMAS.includes(l) ? l : 'pt';
+    }
+
+    function t(chave) {
+      const ui = typeof I18N !== 'undefined' ? I18N.ui : null;
+      return (ui && ui[lang] && ui[lang][chave]) ?? (ui && ui.pt[chave]) ?? '';
+    }
+
+    function hashDesc(s) {
+      s = (s || '').replace(/\s+/g, ' ').trim();
+      let h = 5381;
+      for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+      return h.toString(36);
+    }
+
+    function entradaProduto(item) {
+      if (typeof I18N === 'undefined') return null;
+      return I18N.PRODUTOS[normName(item.name)] || null;
+    }
+
+    const TEM_HANGUL = /[가-힣]/;
+
+    // Nome do produto: { kr: parte em hangul, texto: parte em outro idioma }
+    function nomeProduto(item) {
+      const partes = item.name.split(' - ').map(s => s.trim());
+      const hangul = partes.length > 1 && TEM_HANGUL.test(partes[0]) ? partes[0] : '';
+      const resto = hangul ? partes.slice(1).join(' - ') : item.name.trim();
+      const e = entradaProduto(item);
+      if (lang === 'pt') return { kr: hangul, texto: resto };
+      if (lang === 'en') return { kr: hangul, texto: e?.n?.en || resto };
+      const ko = e?.n?.ko || hangul;
+      if (!ko) aviso.add(`${item.name} (nome ko)`);
+      return ko ? { kr: ko, texto: '' } : { kr: '', texto: resto };
+    }
+
+    function descProduto(item) {
+      const original = item.description || '';
+      if (lang === 'pt' || !original) return original;
+      const e = entradaProduto(item);
+      const traducao = e?.d?.[lang];
+      if (traducao && e.dh === hashDesc(original)) return traducao;
+      aviso.add(`${item.name} (descrição ${lang}${traducao ? ': texto original mudou' : ''})`);
+      return original;
+    }
+
+    function nomeGrupo(grupoId, nomeOriginal) {
+      const nome = (nomeOriginal || '').trim();
+      if (lang === 'pt' || typeof I18N === 'undefined') return nome;
+      const g = I18N.GRUPOS[grupoId]?.[lang];
+      if (g) return g;
+      aviso.add(`grupo ${nome}`);
+      return nome;
+    }
+
+    function nomeOpcao(nome) {
+      if (lang === 'pt' || typeof I18N === 'undefined') return nome;
+      const o = I18N.OPCOES[normName(nome)]?.[lang];
+      if (o) return o;
+      aviso.add(`opção ${nome}`);
+      return nome;
+    }
+
+    function diaSemana(d) {
+      return (lang !== 'pt' && typeof I18N !== 'undefined' && I18N.dias[lang]?.[d]) || d;
+    }
+
+    function nomeHtml(item) {
+      const n = nomeProduto(item);
+      return n.kr
+        ? `<span class="kr">${escapeHtml(n.kr)}</span> ${escapeHtml(n.texto)}`
+        : escapeHtml(n.texto);
+    }
+
+    function aplicarIdiomaEstatico() {
+      document.documentElement.lang = t('htmlLang');
+      document.title = t('title');
+      document.getElementById('searchInput').placeholder = t('search');
+      document.querySelectorAll('#langSwitch button').forEach(b =>
+        b.classList.toggle('active', b.dataset.lang === lang));
+      const carregando = document.querySelector('#menuContent .loading p');
+      if (carregando) carregando.textContent = t('loading');
+    }
+
+    function setLang(novo) {
+      if (!IDIOMAS.includes(novo) || novo === lang) return;
+      lang = novo;
+      try { localStorage.setItem('lang', lang); } catch (e) {}
+      aplicarIdiomaEstatico();
+      if (!menuLoaded) { updateStoreStatus(storeSettings); return; }
+      renderNav();
+      renderMenu(document.getElementById('searchInput').value.trim());
+      renderStoreInfo();
+      avisarSemTraducao();
+    }
+
+    function avisarSemTraducao() {
+      if (lang !== 'pt' && aviso.size) {
+        console.warn(`[i18n:${lang}] sem tradução (aparece em português):`, [...aviso]);
+      }
+      aviso.clear();
+    }
+
+    let menuLoaded = false;
+
     // ===== INIT =====
     async function init() {
+      lang = escolherIdioma();
+      document.getElementById('langSwitch').addEventListener('click', e => {
+        const b = e.target.closest('button[data-lang]');
+        if (b) setLang(b.dataset.lang);
+      });
+      aplicarIdiomaEstatico();
+      document.getElementById('statusText').textContent = t('checking');
       await Promise.all([loadMenu(), loadStore()]);
     }
 
@@ -655,7 +813,7 @@
       }
       if (local === null) {
         document.getElementById('menuContent').innerHTML =
-          '<div class="loading"><p>Erro ao carregar cardápio. Tente novamente.</p></div>';
+          `<div class="loading"><p>${t('error')}</p></div>`;
         return;
       }
       try {
@@ -671,6 +829,8 @@
       renderMenu();
       setupSearch();
       setupScrollSpy();
+      menuLoaded = true;
+      avisarSemTraducao();
     }
 
     // ===== LOAD STORE =====
@@ -726,7 +886,7 @@
 
       if (s.mm_always_open) {
         isOpen = true;
-        hoursText = 'Sempre aberto';
+        hoursText = t('alwaysOpen');
       } else {
         for (const h of hours) {
           const fromDay = dayMap[h.from] ?? -1;
@@ -748,7 +908,7 @@
             if (currentTime >= openTime && currentTime <= closeTime) {
               isOpen = true;
             }
-            hoursText = `${h.from} a ${h.to} • ${h.open} - ${h.close}`;
+            hoursText = `${t('range')(diaSemana(h.from), diaSemana(h.to))} • ${h.open} - ${h.close}`;
           }
         }
       }
@@ -762,10 +922,10 @@
 
       if (isOpen) {
         statusDot.className = 'status-dot';
-        statusText.textContent = `Aberto agora • ${hoursText}`;
+        statusText.textContent = `${t('openNow')} • ${hoursText}`;
       } else {
         statusDot.className = 'status-dot closed';
-        statusText.textContent = `Fechado • ${hoursText}`;
+        statusText.textContent = `${t('closed')} • ${hoursText}`;
       }
     }
 
@@ -795,7 +955,7 @@
       nav.innerHTML = categories.map((cat, i) =>
         `<div class="category-nav-item${i === 0 ? ' active' : ''}"
               data-cat-id="${cat.id}"
-              onclick="scrollToCategory('${cat.id}')">${cat.name}</div>`
+              onclick="scrollToCategory('${cat.id}')">${escapeHtml(nomeGrupo(cat.id, cat.name))}</div>`
       ).join('');
     }
 
@@ -808,10 +968,11 @@
 
       for (const cat of categories) {
         const filteredItems = filter
-          ? cat.items.filter(p =>
-              p.name.toLowerCase().includes(lowerFilter) ||
-              (p.description || '').toLowerCase().includes(lowerFilter)
-            )
+          ? cat.items.filter(p => {
+              const n = nomeProduto(p);
+              const campos = [p.name, p.description, n.kr, n.texto, descProduto(p)];
+              return campos.some(c => (c || '').toLowerCase().includes(lowerFilter));
+            })
           : cat.items;
 
         if (filteredItems.length === 0) continue;
@@ -819,7 +980,7 @@
         html += `
           <div class="category-section" id="cat-${cat.id}">
             <h2 class="category-title">
-              ${cat.name}
+              ${escapeHtml(nomeGrupo(cat.id, cat.name))}
               <span class="category-count">${filteredItems.length}</span>
             </h2>
           </div>
@@ -837,29 +998,21 @@
           } else if (prices.length === 1) {
             priceHtml = formatPrice(prices[0].price);
           } else {
-            priceHtml = `<span class="from">a partir de </span>${formatPrice(minPrice)}<span class="sizes"> • ${prices.length} opções</span>`;
+            priceHtml = `<span class="from">${t('from')}</span>${formatPrice(minPrice)}<span class="from">${t('fromSuffix')}</span><span class="sizes"> • ${t('options')(prices.length)}</span>`;
           }
 
-          // Separar nome coreano do nome em português
-          const nameParts = item.name.split(' - ');
-          let nameHtml = '';
-          if (nameParts.length > 1) {
-            nameHtml = `<span class="kr">${nameParts[0]}</span> ${nameParts.slice(1).join(' - ')}`;
-          } else {
-            nameHtml = item.name;
-          }
 
           html += `
             <div class="product-card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
               ${item.limit_age ? '<span class="age-badge">+18</span>' : ''}
               <div class="product-info">
-                <div class="product-name">${nameHtml}</div>
-                <div class="product-description">${escapeHtml(item.description || '')}</div>
+                <div class="product-name">${nomeHtml(item)}</div>
+                <div class="product-description">${escapeHtml(descProduto(item))}</div>
                 <div class="product-price">${priceHtml}</div>
               </div>
               ${hasImage ? `
                 <div class="product-image">
-                  <img src="${imgSrc}" alt="${escapeHtml(item.name)}" loading="lazy">
+                  <img src="${imgSrc}" alt="${escapeHtml(nomeProduto(item).kr + ' ' + nomeProduto(item).texto)}" loading="lazy">
                 </div>
               ` : ''}
             </div>
@@ -871,9 +1024,9 @@
       html += `
         <div class="footer">
           <div class="hours">🕐 ${getHoursText()}</div>
-          <p>Hanguk House — Comida Coreana Autêntica</p>
+          <p>${t('tagline')}</p>
           <p style="margin-top:4px;">
-            <a href="https://maps.google.com/?q=${storeSettings.address?.latitude || ''},${storeSettings.address?.longitude || ''}" target="_blank">📍 Ver no mapa</a>
+            <a href="https://maps.google.com/?q=${storeSettings.address?.latitude || ''},${storeSettings.address?.longitude || ''}" target="_blank">📍 ${t('map')}</a>
             &nbsp;•&nbsp;
             <a href="https://wa.me/${(storeSettings.mm_whatsapp_phone_number || '').replace(/\D/g, '')}" target="_blank">💬 WhatsApp</a>
           </p>
@@ -885,8 +1038,8 @@
 
     function getHoursText() {
       const hours = storeSettings.mm_operating_hours?.hours || [];
-      if (storeSettings.mm_always_open) return 'Sempre aberto';
-      return hours.map(h => `${h.from} a ${h.to}: ${h.open} – ${h.close}`).join(' | ') || '';
+      if (storeSettings.mm_always_open) return t('alwaysOpen');
+      return hours.map(h => `${t('range')(diaSemana(h.from), diaSemana(h.to))}: ${h.open} – ${h.close}`).join(' | ') || '';
     }
 
     // ===== MODAL =====
@@ -906,21 +1059,23 @@
         imgEl.style.display = 'none';
       }
 
-      titleEl.textContent = item.name;
-      descEl.textContent = item.description || 'Sem descrição disponível.';
+      const n = nomeProduto(item);
+      titleEl.textContent = [n.kr, n.texto].filter(Boolean).join(' ');
+      descEl.textContent = descProduto(item) || t('noDesc');
 
       const prices = item.prices || [];
       if (prices.length > 0) {
         pricesEl.innerHTML = prices.map(p => `
           <div class="modal-price-item">
-            <span class="modal-price-name">${escapeHtml(p.name || 'Único')}</span>
-            <span class="modal-price-value">${p.price === 0 ? 'Consultar' : formatPrice(p.price)}</span>
+            <span class="modal-price-name">${escapeHtml(p.name ? nomeOpcao(p.name.trim()) : t('single'))}</span>
+            <span class="modal-price-value">${p.price === 0 ? t('ask') : formatPrice(p.price)}</span>
           </div>
         `).join('');
       } else {
         pricesEl.innerHTML = '';
       }
 
+      avisarSemTraducao();
       overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
@@ -956,10 +1111,10 @@
     }
 
     function setupScrollSpy() {
-      const navItems = document.querySelectorAll('.category-nav-item');
       const nav = document.getElementById('categoryNav');
 
       window.addEventListener('scroll', () => {
+        const navItems = document.querySelectorAll('.category-nav-item');
         const navHeight = nav.offsetHeight + 20;
         let activeId = null;
 
