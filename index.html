@@ -587,21 +587,59 @@
     }
 
     // ===== LOAD MENU =====
+    // Cardápio de mesa (localmenu) + itens novos do cardápio principal (menu).
+    // O Goomer grátis só edita o cardápio principal; itens que existem lá e ainda
+    // não existem na mesa (comparados pelo nome) entram na mesa automaticamente.
+    // Para não mostrar algum item, adicione o nome em MENU_EXCLUDE.
+    const MENU_API_MAIN = `https://www.goomer.app/webmenu/${SLUG}/menu`;
+    const MENU_EXCLUDE = [];
+    const GRUPOS_IGNORADOS = ['aviso'];
+
+    function normName(n) {
+      return (n || '').replace(/\s+/g, ' ').trim().toLowerCase();
+    }
+
+    function mergeMenus(local, main) {
+      const seen = new Set(local.map(p => normName(p.name)));
+      const skip = new Set(MENU_EXCLUDE.map(normName));
+      const extras = (main || []).filter(p => {
+        const n = normName(p.name);
+        return !seen.has(n) && !skip.has(n) &&
+               !GRUPOS_IGNORADOS.includes(normName(p.group_name));
+      });
+      return local.concat(extras);
+    }
+
+    async function fetchProducts(url) {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error(res.status);
+      return (await res.json()).products || [];
+    }
+
     async function loadMenu() {
+      let local = null;
+      let main = [];
       try {
-        const res = await fetch(MENU_API);
-        const data = await res.json();
-        menuData = data.products || [];
+        local = await fetchProducts(MENU_API);
       } catch (err) {
         console.log('API indisponível, usando dados embutidos');
         if (typeof EMBEDDED_MENU !== 'undefined') {
-          menuData = EMBEDDED_MENU.products || [];
-        } else {
-          document.getElementById('menuContent').innerHTML =
-            '<div class="loading"><p>Erro ao carregar cardápio. Tente novamente.</p></div>';
-          return;
+          local = EMBEDDED_MENU.products || [];
         }
       }
+      if (local === null) {
+        document.getElementById('menuContent').innerHTML =
+          '<div class="loading"><p>Erro ao carregar cardápio. Tente novamente.</p></div>';
+        return;
+      }
+      try {
+        main = await fetchProducts(MENU_API_MAIN);
+      } catch (err) {
+        if (typeof EMBEDDED_MAIN_MENU !== 'undefined') {
+          main = EMBEDDED_MAIN_MENU.products || [];
+        }
+      }
+      menuData = mergeMenus(local, main);
       buildCategories();
       renderNav();
       renderMenu();

@@ -34,6 +34,8 @@ import json
 
 with open('${DIR}/hanguk_localmenu.json') as f:
     menu = json.load(f)
+with open('${DIR}/hanguk_menu.json') as f:
+    main_menu = json.load(f)
 with open('${DIR}/hanguk_settings.json') as f:
     settings = json.load(f)
 
@@ -50,6 +52,7 @@ essential = {
 
 print('// Atualizado em: $(date -Iseconds)')
 print('const EMBEDDED_MENU = ' + json.dumps(menu, ensure_ascii=False) + ';')
+print('const EMBEDDED_MAIN_MENU = ' + json.dumps(main_menu, ensure_ascii=False) + ';')
 print('const EMBEDDED_SETTINGS = ' + json.dumps(essential, ensure_ascii=False) + ';')
 " > "${DIR}/data.js"
 
