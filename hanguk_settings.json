@@ -67,7 +67,7 @@
   "mm_banner_key": "",
   "mm_resized_banners": "",
   "mm_splash_screen_message": "Continue pedindo sua comida favorita!",
-  "menu_url": "https://www.goomer.app/webmenu/hanguk-house/menu/1792699855375",
+  "menu_url": "https://www.goomer.app/webmenu/hanguk-house/menu/1792944182281",
   "mm_always_open": true,
   "mm_autoprint_new_order": "accepted",
   "mm_check_manager_view_bill": false,
@@ -114,7 +114,7 @@
   "mm_in_store_service_tax": "0",
   "mm_in_store_validate_distance_enabled": false,
   "mm_notification_new_order": true,
-  "mm_onsite_menu_url": "https://www.goomer.app/webmenu/hanguk-house/localmenu/1792699855375",
+  "mm_onsite_menu_url": "https://www.goomer.app/webmenu/hanguk-house/localmenu/1792944182281",
   "mm_operating_hours": {
     "hours": [
       {
@@ -224,6 +224,7 @@
   "mm_payment_tuna_pix_checkout_enabled": false,
   "mm_payment_voucher_enabled": false,
   "mm_show_short_address": false,
+  "mm_store_closed": false,
   "mm_suggestive_selling_enabled": true,
   "mm_takeaway_discount": "0",
   "mm_takeaway_discount_enabled": false,
@@ -268,7 +269,6 @@
   "mm_delivery_fee": "0",
   "mm_theme": "system",
   "mm_languages": [],
-  "mm_store_closed": false,
   "mm_abrahao_crm_survey_enabled": true,
   "mm_delivery_fee_enabled": false,
   "mm_autoprint_close_order": false,
